@@ -128,5 +128,3 @@ Ensure `pytest` and `ruff check .` pass before submitting.
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 ````
-
----
