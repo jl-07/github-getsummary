@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+*.pyc
+
+# venv
+venv/
+
+# cache/outputs
+.cache/
+reports/
+cache/
