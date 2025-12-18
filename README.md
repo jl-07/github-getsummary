@@ -1,4 +1,5 @@
 # Git Career Telemetry
+![Demo](docs/assets/demo.png)
 
 ![CI](https://github.com/usuario/git-career-telemetry/actions/workflows/ci.yml/badge.svg) ![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
