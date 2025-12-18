@@ -9,3 +9,7 @@ venv/
 .cache/
 reports/
 cache/
+# Packaging/build artifacts
+*.egg-info/
+dist/
+build/

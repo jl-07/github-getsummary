@@ -17,7 +17,10 @@ python cli.py user torvalds --format md
 # Analyze an organization
 python cli.py org facebook --top 10
 ```
-
+## Install
+```bash
+pip install -e .
+gct --help
 ---
 
 ## 🚀 Installation
