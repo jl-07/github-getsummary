@@ -1,3 +1,31 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "github-getsummary"
+version = "1.0.1"
+description = "GitHub activity consistency reports (MD/HTML/JSON) with caching and a professional CLI."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "Jenner da Rocha Lira Junior", email = "jenner.lira@hotmail.com" }]
+dependencies = [
+  "requests",
+  "typer",
+  "matplotlib",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff"]
+
+[project.scripts]
+gct = "cli:app"
+
+[tool.setuptools]
+py-modules = ["cli"]
+packages = ["core", "visualization"]
+
 [tool.ruff]
 line-length = 88
 target-version = "py310"
