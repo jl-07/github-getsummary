@@ -1,16 +1,3 @@
-Tá bem perto — só tem **3 problemas** no seu README agora:
-
-1. **Você esqueceu de fechar** o bloco de código do TL;DR (faltou ``` antes do “## 🚀 Installation”).
-2. Os **badges estão com URL placeholder** (`usuario` / `your-username`).
-3. Em “Usage” você ainda usa `python cli.py ...` — melhor vender `gct ...` (você já tem entrypoint).
-
-Abaixo vai um **README completo**, já corrigido, pronto pra você **substituir inteiro**.
-
----
-
-# README.md (cole tudo e salve)
-
-````md
 # Git Career Telemetry
 
 ![Demo](docs/assets/demo.png)
