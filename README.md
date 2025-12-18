@@ -1,58 +1,116 @@
 # Git Career Telemetry
 
-Este projeto analisa **o comportamento e a evolução de um desenvolvedor** ao longo do tempo, utilizando **dados públicos do GitHub**. Ao invés de focar apenas na **quantidade de commits**, o objetivo aqui é medir **regularidade, consistência e evolução**.
+![CI](https://github.com/usuario/git-career-telemetry/actions/workflows/ci.yml/badge.svg) ![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
-Através de métricas de tempo, o projeto mapeia a frequência de commits e sua evolução ao longo dos anos, permitindo uma análise mais profunda sobre a disciplina e a progressão de um desenvolvedor.
+A tool to analyze **developer behavior and evolution** over time using public GitHub data. Instead of counting commits, it measures **regularity, consistency, and progression** via time-based metrics.
 
----
+## ⚡ TL;DR
+- **Analyze** consistency (mean gap, variance) for any user or organization.
+- **Visualize** habits with timeline charts and histograms.
+- **Cache-optimized** to respect GitHub API rate limits.
 
-## ❌ O que este projeto NÃO faz:
-- Não cria pontuação de “nível” de desenvolvedor.
-- Não realiza comparações de desenvolvedores entre si.
-- Não usa gamificação.
-- Não coleta dados privados do GitHub.
+```bash
+# Analyze a user
+python cli.py user torvalds --format md
 
-## 📊 Métrica de Consistência
-
-- **Média de dias entre commits:** 10.11
-- **Variância dos intervalos:** 57.14
-
-> Quanto menor a variância, mais consistente é a atividade ao longo do tempo.
+# Analyze an organization
+python cli.py org facebook --top 10
+```
 
 ---
 
-## 📈 Distribuição dos intervalos entre commits
+## 🚀 Installation
 
-![Distribuição](reports/commit_gap_distribution.png)
+### Option 1: Development Mode (Recommended)
+```bash
+git clone https://github.com/your-username/git-career-telemetry.git
+cd git-career-telemetry
+python -m venv venv
+./venv/Scripts/activate  # Windows
+# source venv/bin/activate # Linux/Mac
+
+pip install -r requirements.txt
+```
+
+### Option 2: Run "As Is"
+Ensure you have Python 3.10+ installed.
+```bash
+pip install requests matplotlib typer
+python cli.py --help
+```
 
 ---
 
-## 🧭 Linha do tempo de consistência
+## 📖 Usage
 
-![Timeline](reports/timeline_consistency.png)
+### User Analysis
+Checks consistency of a specific user across all their public repositories.
+```bash
+python cli.py user <username> [--ttl 12] [--format md|html|json] [--output report.html]
+```
+
+### Organization Analysis
+Checks consistency of repositories belonging to an organization.
+```bash
+python cli.py org <orgname> --top 20
+```
+
+### Examples
+See [examples/reports/](examples/reports/) for sample outputs.
 
 ---
 
-## 🛠️ Stack
+## 🏗️ Architecture
 
-- Python
-- GitHub REST API
-- Matplotlib
-- Análise temporal de dados
+The project is structured around Clean Architecture principles:
+
+- **`core/`**: Business logic.
+  - `github_client.py`: Handles API requests, rate limiting, and caching (ETag/304).
+  - `metrics/`: Statistical calculations (Consistency, Timeline).
+  - `use_cases.py`: Orchestrates fetching, calculation, and reporting.
+- **`visualization/`**: Plotting logic using Matplotlib.
+- **`cli.py`**: Entry point using Typer.
+
+### Caching & Rate Limits
+To avoid hitting GitHub's API rate limit (60 requests/hour unauthenticated):
+- **Disk Cache**: Responses are stored in `.cache/` (hashed by URL + params).
+- **Conditional Requests**: Uses `ETag` and `Last-Modified`.
+  - If API returns **304 Not Modified**, the cached response is used (0 quota cost).
+- **TTL**: Configurable (default 12h). Fresh cache hits don't even touch the network.
 
 ---
 
-## 📌 Objetivo do projeto
+## 🔐 Security
 
-Demonstrar evolução técnica real ao longo do tempo, indo além de contagem de commits.
+- **Token Optional**: You can run without a token (lower rate limit).
+- **Environment Variable**: To increase limits (5000 req/hour), set `GITHUB_TOKEN` in your environment or `.env` file (not committed).
+- **No Sensitive Data**: The tool only reads public repository metadata.
 
-Este projeto não mede "quantidade de commits".
-Ele analisa padrões de consistência, pausas e evolução ao longo do tempo,
-que são sinais indiretos de maturidade profissional.
+---
 
-## ❌ O que este projeto NÃO faz (de propósito)
+## 🗺️ Roadmap
 
-- **Não cria pontuação gamificada**: O objetivo não é gerar um ranking entre desenvolvedores, mas sim analisar o comportamento de um único desenvolvedor.
-- **Não compara pessoas**: O foco está no próprio desenvolvimento de um único usuário.
-- **Não usa IA ou machine learning**: Focamos apenas em métricas e dados reais.
-- **Não coleta dados privados**: Só utilizamos dados públicos disponíveis nas APIs do GitHub.
+- [ ] Add support for GitLab/Bitbucket.
+- [ ] Comparison mode (compare year X vs year Y).
+- [ ] Export to PDF.
+- [ ] Web UI (Streamlit/FastAPI).
+- [ ] Activity Heatmap (like GitHub's profile graph).
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+1. Open an Issue to discuss the change.
+2. Fork the repository.
+3. Create a branch (`feature/amazing-feature`).
+4. Commit changes.
+5. Open a Pull Request.
+
+Ensure `pytest` and `ruff check .` pass before submitting.
+
+---
+
+## 📄 License
+
+Distributed under the MIT License. See [LICENSE](LICENSE) for more information.

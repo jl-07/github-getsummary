@@ -3,29 +3,52 @@ from datetime import datetime
 from statistics import mean
 from typing import Dict, List
 
-from core.github_client import GitHubClient
+from core.github_client import GitHubClient, Repository
 
 
 class TimelineMetric:
-    def __init__(self, client: GitHubClient, username: str) -> None:
+    def __init__(
+        self,
+        client: GitHubClient,
+        username: str | None = None,
+        repositories: List[Repository] | None = None,
+    ) -> None:
         self.client = client
         self.username = username
+        self.repositories = repositories
 
     def yearly_average_gap(self) -> Dict[int, float]:
         gaps_by_year: Dict[int, List[int]] = defaultdict(list)
 
-        repos = self.client.iter_user_repositories(self.username)
+        if self.repositories:
+            repos = self.repositories
+        elif self.username:
+            repos = list(self.client.iter_user_repositories(self.username))
+        else:
+            return {}
 
         for repo in repos:
-            commits = self.client._request(
-                f"https://api.github.com/repos/{repo.full_name}/commits",
-                params={"per_page": 100},
-            )
+            try:
+                commits = self.client._request(
+                    f"https://api.github.com/repos/{repo.full_name}/commits",
+                    params={"per_page": 100},
+                )
+            except Exception:
+                continue
 
-            dates = sorted(
-                datetime.fromisoformat(c["commit"]["author"]["date"].replace("Z", ""))
-                for c in commits
-            )
+            if not commits or not isinstance(commits, list):
+                continue
+                
+            dates = []
+            for c in commits:
+                if "commit" in c:
+                    dates.append(
+                        datetime.fromisoformat(
+                            c["commit"]["author"]["date"].replace("Z", "")
+                        )
+                    )
+            
+            dates.sort()
 
             for i in range(1, len(dates)):
                 year = dates[i].year

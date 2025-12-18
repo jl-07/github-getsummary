@@ -1,7 +1,7 @@
-print("TESTE CONSISTENCY RODANDO")
-
 from core.github_client import GitHubClient
 from core.metrics.consistency import ConsistencyMetric
+
+print("TESTE CONSISTENCY RODANDO")
 
 client = GitHubClient()
 metric = ConsistencyMetric(client, "jl-07")
